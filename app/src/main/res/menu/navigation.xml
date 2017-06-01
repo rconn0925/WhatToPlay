@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_discover"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/title_discover" />
+
+    <item
+        android:id="@+id/navigation_hall_of_fame"
+        android:icon="@drawable/trophy"
+        android:title="@string/title_top" />
+
+    <item
+        android:id="@+id/navigation_hot"
+        android:icon="@drawable/ic_whatshot_black_24dp"
+        android:title="@string/title_hot" />
+
+    <item
+        android:id="@+id/navigation_new"
+        android:icon="@drawable/ic_fiber_new_black_24dp"
+        android:title="@string/title_new" />
+
+    <item
+        android:id="@+id/navigation_coming_soon"
+        android:icon="@drawable/ic_new_releases_black_24dp"
+        android:title="@string/title_coming_soon" />
+
+</menu>
