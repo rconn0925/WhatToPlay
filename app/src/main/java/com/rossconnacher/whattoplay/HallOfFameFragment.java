@@ -4,9 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -22,12 +34,15 @@ public class HallOfFameFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG ="HallOfFameFragment" ;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private IGDBEngine mGameEngine;
+    ArrayList<Game> mGames;
 
     public HallOfFameFragment() {
         // Required empty public constructor
@@ -58,14 +73,80 @@ public class HallOfFameFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mGameEngine = new IGDBEngine();
+        mGames = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_hall_of_fame, container, false);
+        View view = inflater.inflate(R.layout.fragment_hall_of_fame, container, false);
+        ButterKnife.inject(this,view);
+        getGames();
+
+        return view;
     }
+
+
+    public void getGames(){
+        String[] fields = new String[]{"id","name","url","created_at","updated_at","summary",
+                "storyline","collection","franchise","hypes","rating","popularity","aggregated_rating",
+                "rating_count","game","developers","publishers","game_engines","category","time_to_beat",
+                "player_perspectives","game_modes","keywords","themes","genres","first_release_date",
+                "status","release_dates","alternative_names","screenshots","videos","cover","esrb",
+            "pegi","websites","tags"};
+
+        Call<String> allGames = mGameEngine.getGames(fields,50,0,"aggregated_rating:desc");
+        allGames.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d(TAG,"message: " + response.message());
+                Log.d(TAG,"body: "+ response.body());
+                try {
+                    if(response.body()!=null){
+                        JSONArray allGamesJson = new JSONArray(response.body());
+
+                        for(int i = 0; i < allGamesJson.length();i++){
+                            JSONObject gameJson = allGamesJson.getJSONObject(i);
+
+
+                            int id = gameJson.getInt("id");
+                            String gameName = gameJson.getString("name");
+                            try{
+                                String gameSummary = gameJson.getString("summary");
+                            } catch (JSONException e){
+                            }
+                            double rating = gameJson.getDouble("rating");
+                            double popularity = gameJson.getDouble("popularity");
+                            double aggregatedRating = gameJson.getDouble("aggregated_rating");
+                            String gameGenres = gameJson.getString("genres");
+                            //Game game = new Game(id,gameName);
+                            Log.d(gameName + " "+ gameGenres + " "+TAG,gameJson.toString(4));
+
+
+
+                        }
+                    } else {
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

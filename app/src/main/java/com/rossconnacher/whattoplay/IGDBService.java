@@ -17,5 +17,5 @@ public interface IGDBService {
     Call<String> getGenres (@Header("X-Mashape-Key") String api_key,@Query("fields") String field, @Query("limit") int limit );
 
     @GET("/games/")
-    Call<String> getGames (@Header("X-Mashape-Key") String api_key,@Header("Accept") String content_type, @Query("fields") String field, @Query("limit") int limit, @Query("offset") int offset);
+    Call<String> getGames (@Header("X-Mashape-Key") String api_key,@Header("Accept") String content_type, @Query("fields") String field, @Query("limit") int limit, @Query("offset") int offset,@Query("order") String order);
 }

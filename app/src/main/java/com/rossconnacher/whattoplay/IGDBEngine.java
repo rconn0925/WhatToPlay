@@ -36,7 +36,7 @@ public class IGDBEngine {
         }
         return mService.getGenres(API_KEY,fieldString,limit);
     }
-    public Call<String> getGames(String[] fields, int limit, int offset){
+    public Call<String> getGames(String[] fields, int limit, int offset,String order){
         String fieldString = "";
         for(int i = 0; i<fields.length;i++){
             if(i==fields.length-1){
@@ -45,6 +45,6 @@ public class IGDBEngine {
                 fieldString+= (fields[i]+",");
             }
         }
-        return mService.getGames(API_KEY,"application/json",fieldString,limit,offset);
+        return mService.getGames(API_KEY,"application/json",fieldString,limit,offset,order);
     }
 }
